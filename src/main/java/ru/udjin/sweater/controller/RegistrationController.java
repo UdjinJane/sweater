@@ -1,6 +1,8 @@
 package ru.udjin.sweater.controller;
 
 
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RestController;
 import ru.udjin.sweater.domain.Role;
 import ru.udjin.sweater.domain.User;
 import ru.udjin.sweater.repos.UserRepo;
@@ -19,7 +21,8 @@ public class RegistrationController {
 
 
   @GetMapping("/registration")
-  public String registration(){
+  public String registration(Model model){
+    model.addAttribute("message","");
     return "registration";
   }
 
