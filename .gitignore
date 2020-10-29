@@ -9,3 +9,12 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+*.xml
+*.xml
+.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_security_2_3_4_RELEASE.xml
+.idea/libraries/Maven__org_springframework_security_spring_security_config_5_3_4_RELEASE.xml
+.idea/libraries/Maven__org_springframework_security_spring_security_core_5_3_4_RELEASE.xml
+.idea/libraries/Maven__org_springframework_security_spring_security_test_5_3_4_RELEASE.xml
+.idea/libraries/Maven__org_springframework_security_spring_security_web_5_3_4_RELEASE.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
