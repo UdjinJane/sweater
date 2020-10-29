@@ -1,6 +1,8 @@
 package ru.udjin.sweater.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import ru.udjin.sweater.domain.Message;
+import ru.udjin.sweater.domain.User;
 import ru.udjin.sweater.repos.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +27,6 @@ public class MainController {
   @GetMapping("/main")
   public String main(Map<String, Object> model) {
     Iterable<Message> messages = messageRepo.findAll();
-
     model.put("messages", messages);
     model.put("findstring","");
 
@@ -33,14 +34,16 @@ public class MainController {
   }
 
   @PostMapping("/main")
-  public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
-    Message message = new Message(text, tag);
-
+  public String add(
+          @AuthenticationPrincipal User user,
+          @RequestParam String text,
+          @RequestParam String tag, Map<String, Object> model) {
+    Message message = new Message(text, tag, user);
     messageRepo.save(message);
-
     Iterable<Message> messages = messageRepo.findAll();
 
     model.put("messages", messages);
+    model.put("findstring", "all");
 
     return "main";
   }
