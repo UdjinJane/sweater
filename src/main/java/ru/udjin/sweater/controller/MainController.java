@@ -1,6 +1,8 @@
 package ru.udjin.sweater.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import ru.udjin.sweater.domain.Message;
 import ru.udjin.sweater.domain.User;
 import ru.udjin.sweater.repos.MessageRepo;
@@ -13,12 +15,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class MainController {
     @Autowired
     private MessageRepo messageRepo;
+// проверяем каталог для хранения файлов
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @GetMapping("/")
     public String greeting(Map<String, Object> model) {
@@ -45,9 +53,24 @@ public class MainController {
     public String add(
             @AuthenticationPrincipal User user,
             @RequestParam String text,
-            @RequestParam String tag, Map<String, Object> model
-    ) {
+            @RequestParam String tag, Map<String, Object> model,
+            @RequestParam("file") MultipartFile file
+            ) throws IOException {
         Message message = new Message(text, tag, user);
+
+        if (file != null && !file.getOriginalFilename().isEmpty()){
+
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()){
+                uploadDir.mkdir();
+            }
+            // уник имя файла
+            String uuidFile = UUID.randomUUID().toString();
+            String  resultFilename = uuidFile + "." + file.getOriginalFilename();
+            // и загружаем
+            file.transferTo(new File(uploadPath + "/" + resultFilename));
+            message.setFilename(resultFilename);
+        }
 
         messageRepo.save(message);
 
